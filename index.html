@@ -1,106 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Metrônomo DQWR DAY 2025</title>
         <link rel="stylesheet" href="style.css" />
     </head>
-
     <body>
         <h1>Metrônomo DQWR DAY 2025</h1>
 
-        <!-- Relógio -->
-        <div id="clock">--:--:--</div>
+        <div class="clock" id="clock">00:00:00</div>
 
-        <!-- Contagem -->
-        <div id="repCounter">Repetições: 0</div>
+        <h2>
+            Repetições:
+            <span id="counter">0</span>
+        </h2>
 
-        <!-- Container -->
         <div class="container">
-            <!-- Ritmo -->
-            <div>
-                <label>Ritmo (vezes por minuto):</label>
-                <input type="number" id="bpm" placeholder="Ex: 30" />
-            </div>
+            <label for="audioInput">Selecione o áudio (opcional):</label>
+            <input type="file" id="audioInput" accept="audio/*" />
 
-            <!-- Upload -->
-            <div>
-                <label>Selecione o áudio (opcional - até 0.5s):</label>
-                <input type="file" id="audioUpload" accept="audio/*" />
-            </div>
+            <label for="bpm">Ritmo (vezes por minuto):</label>
+            <input type="number" id="bpm" value="30" min="1" />
 
-            <!-- Botões -->
             <div class="buttons">
-                <button onclick="startBeeping()" class="start">Iniciar</button>
-                <button onclick="stopBeeping()" class="stop">Parar</button>
-                <button onclick="resetCounter()" class="reset">Reset</button>
+                <button id="startBtn" class="start">Iniciar</button>
+                <button id="stopBtn" class="stop">Parar</button>
+                <button id="resetBtn" class="reset">Reset</button>
             </div>
         </div>
 
-        <script>
-            // Relógio
-            function updateClock() {
-                const now = new Date();
-                const time = new Intl.DateTimeFormat("pt-BR", {
-                    timeStyle: "medium",
-                    timeZone: "America/Sao_Paulo",
-                }).format(now);
-                document.getElementById("clock").textContent = time;
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
-
-            // Áudio padrão
-            let beepAudio = new Audio(
-                "https://leofukuyama.github.io/metronomo_dqwr_day_2025/watshoy_beep.mp3"
-            );
-
-            // Trocar áudio
-            document
-                .getElementById("audioUpload")
-                .addEventListener("change", (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        beepAudio = new Audio(URL.createObjectURL(file));
-                    }
-                });
-
-            // Controle
-            let timer = null;
-            let repCount = 0;
-
-            function startBeeping() {
-                const bpm = Number(document.getElementById("bpm").value);
-
-                if (bpm <= 0) {
-                    alert("Informe um ritmo válido.");
-                    return;
-                }
-
-                // Evitar múltiplos timers
-                if (timer) clearInterval(timer);
-
-                const interval = (60 / bpm) * 1000;
-
-                timer = setInterval(() => {
-                    beepAudio.currentTime = 0;
-                    beepAudio.play();
-
-                    repCount++;
-                    document.getElementById("repCounter").textContent =
-                        "Repetições: " + repCount;
-                }, interval);
-            }
-
-            function stopBeeping() {
-                if (timer) clearInterval(timer);
-            }
-
-            function resetCounter() {
-                repCount = 0;
-                document.getElementById("repCounter").textContent =
-                    "Repetições: 0";
-            }
-        </script>
+        <script src="script.js"></script>
     </body>
 </html>
