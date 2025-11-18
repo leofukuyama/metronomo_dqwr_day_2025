@@ -1,0 +1,100 @@
+/* Estilo global */
+body {
+    margin: 0;
+    padding: 40px;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    min-height: 100vh;
+}
+
+/* Título */
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1d4ed8;
+}
+
+/* Relógio */
+.clock {
+    font-size: 48px;
+    font-family: monospace;
+    background: white;
+    padding: 25px 50px;
+    border-radius: 16px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Cartão principal */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #d1d5db;
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0px 4px 16px rgba(0,0,0,0.1);
+}
+
+/* Campos */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-weight: bold;
+}
+
+.field input {
+    padding: 12px;
+    background: #e5e7eb;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+/* Botões */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
+    transition: 0.2s ease-in-out;
+}
+
+.start {
+    background: #2563eb;
+}
+
+.start:hover {
+    background: #1d4ed8;
+}
+
+.stop {
+    background: #dc2626;
+}
+
+.stop:hover {
+    background: #b91c1c;
+}

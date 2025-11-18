@@ -3,76 +3,40 @@
     <head>
         <meta charset="UTF-8" />
         <title>Metrônomo DQWR DAY 2025</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="style.css" />
     </head>
 
-    <body
-        class="bg-gray-100 text-gray-900 flex flex-col items-center gap-8 p-10 min-h-screen"
-    >
-        <h1 class="text-4xl font-bold text-blue-700">
-            Metrônomo DQWR DAY 2025
-        </h1>
+    <body>
+        <h1 class="title">Metrônomo DQWR DAY 2025</h1>
 
         <!-- Relógio -->
-        <div
-            class="text-6xl font-mono bg-white shadow-lg px-10 py-6 rounded-2xl border border-gray-200"
-            id="clock"
-        >
-            --:--:--
-        </div>
+        <div id="clock" class="clock">--:--:--</div>
 
         <!-- Container principal -->
-        <div
-            class="bg-white shadow-xl p-8 rounded-2xl border border-gray-200 max-w-md w-full flex flex-col gap-6"
-        >
-            <!-- Upload de áudio -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold text-lg">
-                    Selecione o áudio do beep (opcional):
-                </label>
-                <input
-                    type="file"
-                    id="audioUpload"
-                    accept="audio/*"
-                    class="p-3 rounded-lg bg-gray-200 text-gray-800 border border-gray-300"
-                />
+        <div class="card">
+            <!-- Upload -->
+            <div class="field">
+                <label>Selecione o áudio do beep (opcional):</label>
+                <input type="file" id="audioUpload" accept="audio/*" />
             </div>
 
-            <!-- Ritmo -->
-            <div class="flex flex-col gap-2">
-                <label class="font-semibold text-lg">
-                    Ritmo (vezes por minuto):
-                </label>
-                <input
-                    type="number"
-                    id="bpm"
-                    class="p-3 rounded-lg bg-gray-200 text-gray-800 border border-gray-300"
-                    placeholder="Ex: 30"
-                />
+            <!-- BPM -->
+            <div class="field">
+                <label>Ritmo (vezes por minuto):</label>
+                <input type="number" id="bpm" placeholder="Ex: 30" />
             </div>
 
             <!-- Botões -->
-            <div class="flex gap-4 justify-center mt-4">
-                <button
-                    onclick="startBeeping()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold shadow"
-                >
+            <div class="buttons">
+                <button class="btn start" onclick="startBeeping()">
                     Iniciar
                 </button>
-
-                <button
-                    onclick="stopBeeping()"
-                    class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-semibold shadow"
-                >
-                    Parar
-                </button>
+                <button class="btn stop" onclick="stopBeeping()">Parar</button>
             </div>
         </div>
 
         <script>
-            // -----------------------------
-            // Relógio em tempo real
-            // -----------------------------
+            // Relógio
             function updateClock() {
                 const now = new Date();
                 const time = new Intl.DateTimeFormat("pt-BR", {
@@ -81,20 +45,15 @@
                 }).format(now);
                 document.getElementById("clock").textContent = time;
             }
-
             setInterval(updateClock, 1000);
             updateClock();
 
-            // -----------------------------
-            // Beep padrão (caso o usuário não envie áudio)
-            // -----------------------------
+            // Beep padrão
             let beepAudio = new Audio(
                 "https://leofukuyama.github.io/metronomo_dqwr_day_2025/watshoy_beep.mp3"
             );
 
-            // -----------------------------
-            // Trocar o áudio se o usuário enviar um arquivo
-            // -----------------------------
+            // Trocar o áudio
             document
                 .getElementById("audioUpload")
                 .addEventListener("change", (e) => {
@@ -104,9 +63,7 @@
                     }
                 });
 
-            // -----------------------------
-            // Metrônomo (beep x vezes por minuto)
-            // -----------------------------
+            // Metrônomo
             let timer = null;
 
             function startBeeping() {
