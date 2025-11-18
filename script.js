@@ -1,11 +1,43 @@
 let intervalId = null;
 let counter = 0;
 
-// Áudio padrão (beep) - preloaded
-let beep = new Audio(
-    "https://leofukuyama.github.io/metronomo_dqwr_day_2025/watshoy_beep.mp3"
-);
+// Áudio padrão (beep)
+const defaultBeepUrl =
+    "https://leofukuyama.github.io/metronomo_dqwr_day_2025/watshoy_beep.mp3";
+
+let beep = new Audio(defaultBeepUrl);
 beep.preload = "auto";
+
+// 🔒 LIMITA CARACTERES DO INPUT BPM (máx. 3 dígitos)
+const bpmInput = document.getElementById("bpm");
+
+bpmInput.addEventListener("input", function () {
+    // remover tudo que não é número
+    this.value = this.value.replace(/\D/g, "");
+
+    if (this.value === "") return; // impede NaN
+
+    let bpm = Number(this.value);
+
+    // limitar a 3 dígitos
+    if (this.value.length > 3) {
+        this.value = this.value.slice(0, 3);
+        bpm = Number(this.value);
+    }
+
+    // limites lógicos
+    if (bpm > 240) this.value = 240;
+    if (bpm < 1) this.value = 1;
+});
+
+bpmInput.addEventListener("blur", function () {
+    if (!this.value) this.value = 1;
+
+    let bpm = Number(this.value);
+
+    if (bpm > 240) this.value = 240;
+    if (bpm < 1) this.value = 1;
+});
 
 // Helper: garante que a duração do áudio esteja disponível
 function ensureDuration(audio) {
@@ -41,23 +73,66 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// Troca áudio se o usuário enviar um arquivo
-document.getElementById("audioInput").addEventListener("change", function () {
-    if (this.files && this.files.length > 0) {
-        const file = this.files[0];
-        beep = new Audio(URL.createObjectURL(file));
-        beep.preload = "auto";
-    }
-});
+// 🔒 PROTEÇÃO DO INPUT DE ÁUDIO (melhores práticas)
+document
+    .getElementById("audioInput")
+    .addEventListener("change", async function () {
+        if (!this.files || this.files.length === 0) return;
 
-// 🔊 Função que começa o metrônomo com aceleração híbrida
+        const file = this.files[0];
+
+        // 1️⃣ Verificar tipo de arquivo
+        if (!file.type.startsWith("audio/")) {
+            alert("Por favor, selecione um arquivo de áudio válido.");
+            this.value = "";
+            return;
+        }
+
+        // 2️⃣ Limitar tamanho (EXEMPLO: 2MB)
+        const maxSizeMB = 2;
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+        if (file.size > maxSizeBytes) {
+            alert(`O áudio deve ter no máximo ${maxSizeMB} MB.`);
+            this.value = "";
+            return;
+        }
+
+        // 3️⃣ Criar objeto de áudio seguro
+        const newAudio = new Audio();
+        newAudio.preload = "auto";
+
+        const fileURL = URL.createObjectURL(file);
+        newAudio.src = fileURL;
+
+        // 4️⃣ Testar se o áudio carrega corretamente
+        const validateAudio = new Promise((resolve, reject) => {
+            let erro = () => reject("Arquivo de áudio inválido ou corrompido.");
+            let ok = () => resolve(true);
+
+            newAudio.addEventListener("loadedmetadata", ok, { once: true });
+            newAudio.addEventListener("error", erro, { once: true });
+
+            // Timeout para evitar travas
+            setTimeout(() => reject("Falha ao carregar áudio."), 3000);
+        });
+
+        try {
+            await validateAudio;
+            beep = newAudio;
+            console.log("Áudio carregado com sucesso!");
+        } catch (e) {
+            alert(e);
+            beep = new Audio(defaultBeepUrl); // volta ao beep padrão
+            this.value = ""; // limpa input
+        }
+    });
+
+// 🔊 Função que começa o metrônomo
 async function startMetronomeWithFullPlayback() {
     const bpm = parseInt(document.getElementById("bpm").value, 10);
-
-    // Segurança adicional (já validado antes, mas garantimos)
     if (!bpm || bpm < 1 || bpm > 240) return;
 
-    // Limpa intervalos anteriores
     if (intervalId) {
         clearInterval(intervalId);
         intervalId = null;
@@ -68,24 +143,19 @@ async function startMetronomeWithFullPlayback() {
     const duration = await ensureDuration(beep);
     const audioDurationMs = Math.max(1, duration * 1000);
 
-    // taxa mínima = 1 (normal)
     let requiredRate = audioDurationMs / intervalMs;
     if (requiredRate < 1) requiredRate = 1;
 
     beep.playbackRate = requiredRate;
 
-    // Primeiro toque
     try {
         beep.currentTime = 0;
         await beep.play();
-    } catch (e) {
-        console.warn("Erro ao tocar o áudio imediatamente:", e);
-    }
+    } catch (e) {}
 
     counter++;
     document.getElementById("counter").textContent = counter;
 
-    // Ciclos seguintes
     intervalId = setInterval(async () => {
         const dur =
             !isNaN(beep.duration) && beep.duration > 0
@@ -100,29 +170,26 @@ async function startMetronomeWithFullPlayback() {
         try {
             beep.currentTime = 0;
             await beep.play();
-        } catch (e) {
-            console.warn("Erro ao tocar o áudio:", e);
-        }
+        } catch (e) {}
 
         counter++;
         document.getElementById("counter").textContent = counter;
     }, intervalMs);
 }
 
-// ▶ INICIAR — validado com limite de BPM **antes** de chamar o metrônomo
+// ▶ INICIAR
 document.getElementById("startBtn").addEventListener("click", () => {
-    let bpm = parseInt(document.getElementById("bpm").value);
+    const bpm = parseInt(document.getElementById("bpm").value);
 
-    // 🔒 Impede iniciar fora do intervalo
     if (isNaN(bpm) || bpm < 1 || bpm > 240) {
         alert("Por favor, insira um BPM entre 1 e 240.");
-        return; // ⛔ OBRIGATÓRIO! Sem isso o metrônomo iniciava.
+        return;
     }
 
     startMetronomeWithFullPlayback();
 });
 
-// ⏹ Parar (não reseta contador)
+// ⏹ Parar
 document.getElementById("stopBtn").addEventListener("click", () => {
     if (intervalId) {
         clearInterval(intervalId);
@@ -130,7 +197,7 @@ document.getElementById("stopBtn").addEventListener("click", () => {
     }
 });
 
-// 🔄 Reset (zera contador)
+// 🔄 Reset contador
 document.getElementById("resetBtn").addEventListener("click", () => {
     counter = 0;
     document.getElementById("counter").textContent = counter;
