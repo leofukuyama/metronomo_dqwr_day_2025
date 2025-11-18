@@ -15,28 +15,36 @@ bpmInput.addEventListener("input", function () {
     // remover tudo que não é número
     this.value = this.value.replace(/\D/g, "");
 
-    if (this.value === "") return; // impede NaN
+    if (this.value === "") return;
+
+    // Se tiver 4 dígitos ou mais → força para 240
+    if (this.value.length >= 4) {
+        this.value = "240";
+        return;
+    }
 
     let bpm = Number(this.value);
 
-    // limitar a 3 dígitos
-    if (this.value.length > 3) {
-        this.value = this.value.slice(0, 3);
-        bpm = Number(this.value);
+    // limite superior
+    if (bpm > 240) {
+        this.value = "240";
+        return;
     }
 
-    // limites lógicos
-    if (bpm > 240) this.value = 240;
-    if (bpm < 1) this.value = 1;
+    // limite inferior
+    if (bpm < 1) {
+        this.value = "1";
+        return;
+    }
 });
 
 bpmInput.addEventListener("blur", function () {
-    if (!this.value) this.value = 1;
+    if (!this.value) this.value = "1";
 
     let bpm = Number(this.value);
 
-    if (bpm > 240) this.value = 240;
-    if (bpm < 1) this.value = 1;
+    if (bpm > 240) this.value = "240";
+    if (bpm < 1) this.value = "1";
 });
 
 // Helper: garante que a duração do áudio esteja disponível
