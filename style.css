@@ -28,28 +28,31 @@ body {
 h1 {
   color: #1d4ed8;
   margin: 0;
-  font-size: clamp(1.25rem, 3vw, 1.75rem); /* responsivo */
+  font-size: clamp(1.8rem, 5vw, 3rem); /* maior */
   text-align: center;
 }
 
 /* relógio */
 .clock {
   font-family: "Courier New", monospace;
-  font-size: clamp(1.8rem, 6vw, 3.5rem);
+  font-size: clamp(2.4rem, 8vw, 4.5rem); /* maior e responsivo */
   background: #fff;
-  padding: clamp(12px, 4vw, 28px);
-  border-radius: 16px;
+  padding: clamp(16px, 5vw, 32px);
+  border-radius: 18px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   border: 1px solid #e6e9ef;
   text-align: center;
-  min-width: 0; /* evita overflow em flex */
+  min-width: 0;
 }
+
 
 /* contador */
 h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  text-align: center;
 }
+
 #counter {
   color: #1d4ed8;
   font-weight: 700;

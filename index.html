@@ -17,11 +17,13 @@
         </h2>
 
         <div class="container">
-            <label for="audioInput">Selecione o áudio (opcional):</label>
-            <input type="file" id="audioInput" accept="audio/*" />
-
             <label for="bpm">Ritmo (vezes por minuto):</label>
             <input type="number" id="bpm" value="30" min="1" />
+
+            <label for="audioInput">
+                Selecione o áudio (opcional - até 0.5s):
+            </label>
+            <input type="file" id="audioInput" accept="audio/*" />
 
             <div class="buttons">
                 <button id="startBtn" class="start">Iniciar</button>
