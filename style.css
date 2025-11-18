@@ -1,95 +1,128 @@
+/* reset mínimo e box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f4f4f4;
+  color: #111827;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%; /* evita zoom automático em alguns mobiles */
 }
 
+/* título */
 h1 {
-    color: #1d4ed8;
-    margin-bottom: 20px;
+  color: #1d4ed8;
+  margin: 0;
+  font-size: clamp(1.25rem, 3vw, 1.75rem); /* responsivo */
+  text-align: center;
 }
 
+/* relógio */
 .clock {
-    font-size: 4rem;
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  font-family: "Courier New", monospace;
+  font-size: clamp(1.8rem, 6vw, 3.5rem);
+  background: #fff;
+  padding: clamp(12px, 4vw, 28px);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border: 1px solid #e6e9ef;
+  text-align: center;
+  min-width: 0; /* evita overflow em flex */
 }
 
+/* contador */
+h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+#counter {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+/* container principal adaptável */
 .container {
-    background: white;
-    width: 100%;
-    max-width: 480px;
-    margin: 20px auto;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: left;
+  background: #fff;
+  width: 100%;
+  max-width: 520px; /* bom limite para desktop */
+  margin: 0 auto;
+  padding: clamp(14px, 4vw, 28px);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border: 1px solid #e6e9ef;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0; /* importante em containers flex para evitar overflow */
 }
 
+/* labels e inputs */
 label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
-/* Inputs ocupando 100% */
+/* inputs full width */
 input[type="file"],
 input[type="number"] {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  font-size: 1rem;
+  outline: none;
 }
 
+/* botão e botões responsivos */
 .buttons {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
-/* Botões */
+/* botões ocupam o mesmo espaço */
 button {
-    flex: 1;
-    padding: 12px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    color: white;
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  color: #fff;
+  cursor: pointer;
 }
 
-.start {
-    background: #1d4ed8;
+/* cores */
+.start { background: #1d4ed8; }
+.stop  { background: #dc2626; }
+.reset { background: #6b7280; }
+
+/* hover (mobile ignora hover, mas ok no desktop) */
+button:hover { filter: brightness(0.95); }
+
+/* RESPONSIVO: em telas pequenas empilha os botões e reduz paddings */
+@media (max-width: 520px) {
+  body { padding: 12px; }
+  .buttons { flex-direction: column; }
+  .clock { font-size: clamp(1.6rem, 8vw, 2.6rem); padding: 16px; }
+  .container { padding: 16px; }
 }
 
-.stop {
-    background: #dc2626;
-}
-
-.reset {
-    background: #6b7280;
-}
-
-/* RESPONSIVIDADE */
-@media (max-width: 500px) {
-    .clock {
-        font-size: 2.3rem;
-        padding: 20px;
-    }
-
-    .buttons {
-        flex-direction: column;
-    }
-
-    button {
-        width: 100%;
-    }
-}
+/* evita que algo gere horizontal scroll */
+html { overflow-x: hidden; }
